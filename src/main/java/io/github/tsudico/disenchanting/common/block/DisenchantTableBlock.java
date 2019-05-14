@@ -7,6 +7,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.EnchantingTableBlockEntity;
 import net.minecraft.entity.VerticalEntityPosition;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -48,6 +50,6 @@ public class DisenchantTableBlock extends BlockWithEntity {
     }
 
     public void onBroken(IWorld world, BlockPos blockPos, BlockState blockState) {
-        dropStack(world.getWorld(), blockPos, getItem().getDefaultStack());
+        dropStack(world.getWorld(), blockPos, new ItemStack(Item.getItemFromBlock(this)));
     }
 }
