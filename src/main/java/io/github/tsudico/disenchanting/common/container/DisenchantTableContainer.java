@@ -1,10 +1,12 @@
 package io.github.tsudico.disenchanting.common.container;
 
-import com.sun.istack.internal.Nullable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Blocks;
-import net.minecraft.container.*;
+import net.minecraft.container.BlockContext;
+import net.minecraft.container.Container;
+import net.minecraft.container.Property;
+import net.minecraft.container.Slot;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.InfoEnchantment;
@@ -99,13 +101,13 @@ public class DisenchantTableContainer extends Container {
             }
 
             public boolean canTakeItems(PlayerEntity playerEntity) {
-                return (playerEntity.abilities.creativeMode || playerEntity.experience >= levelCost.get()) && levelCost.get() > 0 && hasStack();
+                return (playerEntity.abilities.creativeMode || playerEntity.experienceLevel >= levelCost.get()) && levelCost.get() > 0 && hasStack();
             }
 
             public ItemStack onTakeItem(PlayerEntity playerEntity, ItemStack itemStack) {
                 // Take experience from player
                 if (!playerEntity.abilities.creativeMode) {
-                    playerEntity.method_7316(-levelCost.get());
+                    playerEntity.addExperienceLevels(-levelCost.get());
                 }
 
                 // Reduce inventoryInput of books by one
@@ -164,7 +166,6 @@ public class DisenchantTableContainer extends Container {
                     return (itemStack.isEmpty() || playerEntity.isCreative() || !EnchantmentHelper.hasBindingCurse(itemStack)) && super.canTakeItems(playerEntity);
                 }
 
-                @Nullable
                 @Environment(EnvType.CLIENT)
                 public String getBackgroundSprite() {
                     return EMPTY_ARMOR_SLOT_IDS[equipmentSlot.getEntitySlotId()];
@@ -173,7 +174,6 @@ public class DisenchantTableContainer extends Container {
         }
         // Player Offhand
         addSlot(new Slot(playerInventory, 40, 26, 62) {
-            @Nullable
             @Environment(EnvType.CLIENT)
             public String getBackgroundSprite() {
                 return "item/empty_armor_slot_shield";
@@ -240,7 +240,7 @@ public class DisenchantTableContainer extends Container {
 
     public ItemStack transferSlot(PlayerEntity playerEntity, int slot) {
         ItemStack newSlotStack = ItemStack.EMPTY;
-        Slot oldSlot = (Slot)slotList.get(slot);
+        Slot oldSlot = slotList.get(slot);
         if (oldSlot != null && oldSlot.hasStack()) {
             ItemStack oldSlotStack = oldSlot.getStack();
             newSlotStack = oldSlotStack.copy();

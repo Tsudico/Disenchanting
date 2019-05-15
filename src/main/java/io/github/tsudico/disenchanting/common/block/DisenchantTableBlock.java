@@ -4,8 +4,7 @@ import io.github.tsudico.disenchanting.Disenchanting;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.EnchantingTableBlockEntity;
-import net.minecraft.entity.VerticalEntityPosition;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,7 +20,7 @@ public class DisenchantTableBlock extends BlockWithEntity {
     private static final VoxelShape SHAPE = Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
 
     @Override
-    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, VerticalEntityPosition verticalEntityPosition) {
+    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, EntityContext entityContext) {
         return SHAPE;
     }
 
@@ -31,9 +30,7 @@ public class DisenchantTableBlock extends BlockWithEntity {
         return BlockRenderType.MODEL;
     }
 
-    public BlockEntity createBlockEntity(BlockView blockView) {
-        return new EnchantingTableBlockEntity();
-    }
+    public BlockEntity createBlockEntity(BlockView blockView) { return new DisenchantTableBlockEntity(); }
 
     @Override
     public boolean canPlaceAtSide(BlockState blockState, BlockView blockView, BlockPos blockPos, BlockPlacementEnvironment blockPlacementEnvironment) {

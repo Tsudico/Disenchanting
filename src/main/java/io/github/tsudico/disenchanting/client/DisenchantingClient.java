@@ -6,8 +6,8 @@ import io.github.tsudico.disenchanting.common.container.DisenchantTableContainer
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.minecraft.client.gui.ContainerScreen;
-import net.minecraft.text.StringTextComponent;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +35,7 @@ public class DisenchantingClient implements ClientModInitializer {
         private int offset = 0;
 
         public DisenchantTableContainerScreen(DisenchantTableContainer container) {
-            super(container, container.playerInventory, new StringTextComponent("Disenchant Table"));
+            super(container, container.playerInventory, new TextComponent("Disenchant Table"));
         }
 
         @Override
@@ -64,8 +64,8 @@ public class DisenchantingClient implements ClientModInitializer {
             float top = 69.0F;
             if( container.getLevelCost() > 0) {
                 if(Shutter.CLOSED != shutter) {
-                    TranslatableTextComponent cost = new TranslatableTextComponent("container.repair.cost", container.getLevelCost());
-                    if (container.getLevelCost() < playerInventory.player.experience || playerInventory.player.isCreative()) {
+                    TranslatableComponent cost = new TranslatableComponent("container.repair.cost", container.getLevelCost());
+                    if (container.getLevelCost() <= playerInventory.player.experienceLevel || playerInventory.player.isCreative()) {
                         font.draw(cost.getText(), left, top, 0x00FF00);
                     } else {
                         font.draw(cost.getText(), left, top, 0xFF0000);
