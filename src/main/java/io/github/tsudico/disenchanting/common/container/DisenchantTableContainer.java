@@ -20,6 +20,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.ItemScatterer;
 
 import java.util.Map;
 import java.util.Random;
@@ -292,8 +293,7 @@ public class DisenchantTableContainer extends Container {
     public void close(PlayerEntity playerEntity) {
         super.close(playerEntity);
         for(int i = 0; i < inventoryInput.getInvSize(); i++) {
-            playerEntity.dropItem(inventoryInput.getInvStack(i), false);
-            inventoryInput.removeInvStack(i);
+            ItemScatterer.spawn(playerEntity.world, playerEntity.getBlockPos(), inventoryInput);
         }
     }
 
