@@ -1,5 +1,6 @@
 package io.github.tsudico.disenchanting.common.block;
 
+import io.github.tsudico.disenchanting.Disenchanting;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Tickable;
@@ -7,7 +8,6 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.Random;
 
-import static io.github.tsudico.disenchanting.Disenchanting.DISENCHANT_TABLE_ENTITY;
 
 public class DisenchantTableBlockEntity extends BlockEntity implements Tickable {
     public int ticks;
@@ -23,7 +23,7 @@ public class DisenchantTableBlockEntity extends BlockEntity implements Tickable 
     private static final Random RANDOM = new Random();
 
     public DisenchantTableBlockEntity() {
-        super(DISENCHANT_TABLE_ENTITY);
+        super(Disenchanting.DISENCHANT_TABLE_ENTITY);
     }
 
     public void tick() {

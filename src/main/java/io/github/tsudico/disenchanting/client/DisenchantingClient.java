@@ -1,32 +1,37 @@
 package io.github.tsudico.disenchanting.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import io.github.prospector.modmenu.api.ModMenuApi;
 import io.github.tsudico.disenchanting.Disenchanting;
+import io.github.tsudico.disenchanting.common.config.DisenchantingConfig;
 import io.github.tsudico.disenchanting.common.container.DisenchantTableContainer;
+import me.shedaniel.cloth.gui.ClothConfigScreen;
+import me.shedaniel.cloth.gui.entries.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.minecraft.client.gui.ContainerScreen;
+import net.minecraft.client.gui.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.function.Function;
+
+import static io.github.tsudico.disenchanting.Disenchanting.MODLOG;
 
 public class DisenchantingClient implements ClientModInitializer {
-    private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
     public void onInitializeClient() {
+        MODLOG("Initializing Disenchanting Client");
         //Registers a gui factory that opens our example gui, this reads the block pos from the buffer
         ScreenProviderRegistry.INSTANCE.registerFactory(Disenchanting.DISENCHANT_CONTAINER, DisenchantTableContainerScreen::new);
 
-        LOGGER.info("Initializing Disenchanting Client");
     }
 
     public static class DisenchantTableContainerScreen extends ContainerScreen<DisenchantTableContainer> {
         private int guiLeft;
         private int guiTop;
-        private static final Identifier BG_TEXTURE = new Identifier("disenchanting:textures/gui/container/disenchant_table.png");
+        private static final Identifier BG_TEXTURE = new Identifier(Disenchanting.MODID + ":textures/gui/container/disenchant_table.png");
         private Shutter shutter;
         private float delta = Float.MIN_VALUE;
         private float lastdelta = Float.MAX_VALUE;

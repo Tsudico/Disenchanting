@@ -25,6 +25,7 @@ import net.minecraft.util.ItemScatterer;
 import java.util.Map;
 import java.util.Random;
 
+import static io.github.tsudico.disenchanting.common.config.DisenchantingConfig.*;
 import static java.lang.Math.round;
 
 public class DisenchantTableContainer extends Container {
@@ -241,7 +242,7 @@ public class DisenchantTableContainer extends Container {
             if(null != selectedEnchantment) {
                 int weight = selectedEnchantment.getWeight().getWeight();
                 int enchantLevel = selectedEnchantmentLevel;
-                float cost = (enchantLevel * 5) * (1.6F - (weight * 0.03F));
+                float cost = (enchantLevel * LEVEL_MULTIPLIER) * (OFFSET - (weight * RARITY_MULTIPLIER));
                 levelCost.set(round(cost));
                 ItemStack enchantedBook = EnchantedBookItem.makeStack(new InfoEnchantment(selectedEnchantment, selectedEnchantmentLevel));
                 result.setInvStack(0, enchantedBook);

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "disenchanting",
-  "version": "0.7.3",
+  "version": "0.8.0",
 
   "name": "Disenchanting",
   "description": "This mod adds a disenchanting table where you can extract enchantments to books using experience.",
@@ -19,12 +19,9 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "io.github.tsudico.disenchanting.Disenchanting"
-    ],
-    "client": [
-      "io.github.tsudico.disenchanting.client.DisenchantingClient"
-    ]
+    "main": [ "io.github.tsudico.disenchanting.Disenchanting" ],
+    "client": [ "io.github.tsudico.disenchanting.client.DisenchantingClient" ],
+    "modmenu": [ "io.github.tsudico.disenchanting.client.DisenchantingClientConfig" ]
   },
   "mixins": [
     "disenchanting.mixins.json"
