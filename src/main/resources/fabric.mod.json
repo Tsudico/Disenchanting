@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "disenchanting",
-  "version": "0.8.0",
+  "version": "0.8.1",
 
   "name": "Disenchanting",
   "description": "This mod adds a disenchanting table where you can extract enchantments to books using experience.",

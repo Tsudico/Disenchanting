@@ -1,20 +1,14 @@
 package io.github.tsudico.disenchanting.client;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import io.github.prospector.modmenu.api.ModMenuApi;
 import io.github.tsudico.disenchanting.Disenchanting;
-import io.github.tsudico.disenchanting.common.config.DisenchantingConfig;
 import io.github.tsudico.disenchanting.common.container.DisenchantTableContainer;
-import me.shedaniel.cloth.gui.ClothConfigScreen;
-import me.shedaniel.cloth.gui.entries.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.minecraft.client.gui.ContainerScreen;
-import net.minecraft.client.gui.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
-import java.util.function.Function;
 
 import static io.github.tsudico.disenchanting.Disenchanting.MODLOG;
 
@@ -54,7 +48,7 @@ public class DisenchantingClient implements ClientModInitializer {
         @Override
         public void render(int var1, int var2, float var3) {
             delta = var3;
-            if(lastdelta > delta) {
+            if (lastdelta > delta) {
                 lastdelta = delta;
             }
             renderBackground();
@@ -67,8 +61,8 @@ public class DisenchantingClient implements ClientModInitializer {
         public void drawForeground(int int_1, int int_2) {
             float left = 49.0F;
             float top = 69.0F;
-            if( container.getLevelCost() > 0) {
-                if(Shutter.CLOSED != shutter) {
+            if (container.getLevelCost() > 0) {
+                if (Shutter.CLOSED != shutter) {
                     TranslatableComponent cost = new TranslatableComponent("container.repair.cost", container.getLevelCost());
                     if (container.getLevelCost() <= playerInventory.player.experienceLevel || playerInventory.player.isCreative()) {
                         font.draw(cost.getText(), left, top, 0x00FF00);
@@ -76,25 +70,25 @@ public class DisenchantingClient implements ClientModInitializer {
                         font.draw(cost.getText(), left, top, 0xFF0000);
                     }
                 }
-                if(Shutter.CLOSED == shutter || Shutter.CLOSING == shutter) {
+                if (Shutter.CLOSED == shutter || Shutter.CLOSING == shutter) {
                     shutter = Shutter.OPENING;
                 }
-            } else if(Shutter.OPEN == shutter || Shutter.OPENING == shutter) {
+            } else if (Shutter.OPEN == shutter || Shutter.OPENING == shutter) {
                 shutter = Shutter.CLOSING;
             }
-            if(Shutter.OPEN != shutter) {
-                switch(shutter) {
+            if (Shutter.OPEN != shutter) {
+                switch (shutter) {
                     case CLOSED:
                         offset = 0;
                         break;
                     case OPENING:
-                        if(++offset >= end - start) {
+                        if (++offset >= end - start) {
                             shutter = Shutter.OPEN;
                             offset = end - start;
                         }
                         break;
                     case CLOSING:
-                        if(--offset <= 0) {
+                        if (--offset <= 0) {
                             shutter = Shutter.CLOSED;
                             offset = 0;
                         }

@@ -5,10 +5,11 @@ import io.github.tsudico.disenchanting.Disenchanting;
 import io.github.tsudico.disenchanting.common.config.DisenchantingConfig;
 import me.shedaniel.cloth.api.ConfigScreenBuilder;
 import me.shedaniel.cloth.gui.ClothConfigScreen;
-import me.shedaniel.cloth.gui.entries.FloatListEntry;
+import me.shedaniel.cloth.gui.entries.DoubleListEntry;
 import me.shedaniel.cloth.gui.entries.TextListEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.Screen;
 
 import java.util.function.Function;
@@ -24,36 +25,42 @@ public class DisenchantingClientConfig implements ModMenuApi {
     public Function<Screen, ? extends Screen> getConfigScreenFactory() {
         return (screen) -> {
             ClothConfigScreen.Builder builder = new ClothConfigScreen.Builder(screen, "Disenchanting Config", (config) -> {
-                DisenchantingConfig.save();
+                if (FabricLoader.getInstance().isModLoaded("nightconfig4fabric")) {
+                    DisenchantingConfig.save();
+                }
             });
             builder.addCategories("Disenchant Table");
             ConfigScreenBuilder.CategoryBuilder disenchantTable = builder.getCategory("Disenchant Table");
-            disenchantTable.addOption(new TextListEntry("Cost Formula", "Cost = (Level * LevelMultiplier) * (Offset - (Rarity * RarityMultiplier)"));
-            disenchantTable.addOption(new TextListEntry("Multiplier Description", "If Level Multiplier is set to 0, Cost will always be 0."));
-            disenchantTable.addOption(
-                    new FloatListEntry(
-                            "Level Multiplier",
-                            DisenchantingConfig.LEVEL_MULTIPLIER,
-                            "text.cloth.reset_value",
-                            () -> DisenchantingConfig.DEFAULT_LEVEL_MULTIPLIER,
-                            (levelMultiplier) -> DisenchantingConfig.LEVEL_MULTIPLIER = levelMultiplier
-                    ).setMinimum(0.0F).setMaximum(10.0F));
-            disenchantTable.addOption(
-                    new FloatListEntry(
-                            "Rarity Multiplier",
-                            DisenchantingConfig.RARITY_MULTIPLIER,
-                            "text.cloth.reset_value",
-                            () -> DisenchantingConfig.DEFAULT_RARITY_MULTIPLIER,
-                            (rarityMultiplier) -> DisenchantingConfig.RARITY_MULTIPLIER = rarityMultiplier
-                    ).setMinimum(0.0F).setMaximum(10.0F));
-            disenchantTable.addOption(
-                    new FloatListEntry(
-                            "Offset",
-                            DisenchantingConfig.OFFSET,
-                            "text.cloth.reset_value",
-                            () -> DisenchantingConfig.DEFAULT_OFFSET,
-                            (offset) -> DisenchantingConfig.OFFSET = offset
-                    ).setMinimum(0.0F).setMaximum(10.0F));
+            if (!FabricLoader.getInstance().isModLoaded("nightconfig4fabric")) {
+                disenchantTable.addOption(new TextListEntry("Config Save", "If you want to adjust configuration, please add the mod:\n\n     Night Config 4 Fabric"));
+            } else {
+                disenchantTable.addOption(new TextListEntry("Cost Formula", "Cost = (Level * LevelMultiplier) * (Offset - (Rarity * RarityMultiplier)"));
+                disenchantTable.addOption(new TextListEntry("Multiplier Description", "If Level Multiplier is set to 0, Cost will always be 0."));
+                disenchantTable.addOption(
+                        new DoubleListEntry(
+                                "Level Multiplier",
+                                Disenchanting.LEVEL_MULTIPLIER,
+                                "text.cloth.reset_value",
+                                () -> Disenchanting.DEFAULT_LEVEL_MULTIPLIER,
+                                (levelMultiplier) -> Disenchanting.LEVEL_MULTIPLIER = levelMultiplier
+                        ).setMinimum(Disenchanting.MIN_FLOAT_VALUE).setMaximum(Disenchanting.MAX_FLOAT_VALUE));
+                disenchantTable.addOption(
+                        new DoubleListEntry(
+                                "Rarity Multiplier",
+                                Disenchanting.RARITY_MULTIPLIER,
+                                "text.cloth.reset_value",
+                                () -> Disenchanting.DEFAULT_RARITY_MULTIPLIER,
+                                (rarityMultiplier) -> Disenchanting.RARITY_MULTIPLIER = rarityMultiplier
+                        ).setMinimum(Disenchanting.MIN_FLOAT_VALUE).setMaximum(Disenchanting.MAX_FLOAT_VALUE));
+                disenchantTable.addOption(
+                        new DoubleListEntry(
+                                "Offset",
+                                Disenchanting.OFFSET,
+                                "text.cloth.reset_value",
+                                () -> Disenchanting.DEFAULT_OFFSET,
+                                (offset) -> Disenchanting.OFFSET = offset
+                        ).setMinimum(Disenchanting.MIN_FLOAT_VALUE).setMaximum(Disenchanting.MAX_FLOAT_VALUE));
+            }
             builder.doesConfirmSave();
             return builder.build();
         };

@@ -25,7 +25,7 @@ import net.minecraft.util.ItemScatterer;
 import java.util.Map;
 import java.util.Random;
 
-import static io.github.tsudico.disenchanting.common.config.DisenchantingConfig.*;
+import static io.github.tsudico.disenchanting.Disenchanting.*;
 import static java.lang.Math.round;
 
 public class DisenchantTableContainer extends Container {
@@ -63,9 +63,11 @@ public class DisenchantTableContainer extends Container {
         // Enchanted item slot
         addSlot(new Slot(inventoryInput, 0, 98, 8) {
             public boolean canInsert(ItemStack itemStack) {
-                if(itemStack.getItem() == Items.ENCHANTED_BOOK) {
+                if (itemStack.getItem() == Items.ENCHANTED_BOOK) {
                     return (EnchantmentHelper.getEnchantments(itemStack).size() > 1);
-                } else { return itemStack.hasEnchantments(); }
+                } else {
+                    return itemStack.hasEnchantments();
+                }
             }
 
             public int getMaxStackAmount() {
@@ -81,7 +83,7 @@ public class DisenchantTableContainer extends Container {
 
             public void setStack(ItemStack itemStack) {
                 selectedEnchantment = null;
-                this.inventory.setInvStack( 0, itemStack);
+                this.inventory.setInvStack(0, itemStack);
                 this.markDirty();
             }
         });
@@ -116,19 +118,18 @@ public class DisenchantTableContainer extends Container {
 
                 // Reduce inventoryInput of books by one
                 ItemStack newBooks = inventoryInput.getInvStack(1);
-                if(newBooks.getAmount() > 1) {
+                if (newBooks.getAmount() > 1) {
                     newBooks.setAmount(newBooks.getAmount() - 1);
-                    inventoryInput.setInvStack( 1, newBooks);
-                }
-                else {
+                    inventoryInput.setInvStack(1, newBooks);
+                } else {
                     inventoryInput.setInvStack(1, ItemStack.EMPTY);
                 }
 
                 // Adjust enchanted item to remove enchantment
-                ItemStack enchantedItem = inventoryInput.getInvStack( 0).copy();
+                ItemStack enchantedItem = inventoryInput.getInvStack(0).copy();
                 Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(enchantedItem);
                 enchantments.remove(selectedEnchantment);
-                if(enchantedItem.getItem() != Items.ENCHANTED_BOOK) {
+                if (enchantedItem.getItem() != Items.ENCHANTED_BOOK) {
                     enchantedItem.removeSubTag("Enchantments");
                     EnchantmentHelper.set(enchantments, enchantedItem);
                     inventoryInput.setInvStack(0, enchantedItem);
@@ -139,7 +140,7 @@ public class DisenchantTableContainer extends Container {
                     for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
                         EnchantedBookItem.addEnchantment(enchantedBookItem, new InfoEnchantment(entry.getKey(), entry.getValue()));
                     }
-                    inventoryInput.setInvStack( 0, enchantedBookItem);
+                    inventoryInput.setInvStack(0, enchantedBookItem);
                 }
 
                 // Reset experience cost and return enchanted book
@@ -152,17 +153,17 @@ public class DisenchantTableContainer extends Container {
 
         int invSlot;
         // Player Hotbar
-        for(invSlot = 0; invSlot < 9; ++invSlot) {
+        for (invSlot = 0; invSlot < 9; ++invSlot) {
             addSlot(new Slot(playerInventory, invSlot, 8 + invSlot * 18, 142));
         }
         // Player Inventory
-        for(invSlot = 0; invSlot < 3; ++invSlot) {
-            for(int column = 0; column < 9; ++column) {
+        for (invSlot = 0; invSlot < 3; ++invSlot) {
+            for (int column = 0; column < 9; ++column) {
                 addSlot(new Slot(playerInventory, column + invSlot * 9 + 9, 8 + column * 18, 84 + invSlot * 18));
             }
         }
         // Player Armor
-        for(invSlot = 0; invSlot < 4; ++invSlot) {
+        for (invSlot = 0; invSlot < 4; ++invSlot) {
             final EquipmentSlot equipmentSlot = EQUIPMENT_SLOT_ORDER[invSlot];
             addSlot(new Slot(playerInventory, 39 - invSlot, 8, 8 + invSlot * 18) {
                 public int getMaxStackAmount() {
@@ -202,7 +203,7 @@ public class DisenchantTableContainer extends Container {
     }
 
     private void updateResult() {
-        if(playerInventory.player.world.isClient) return;
+        if (playerInventory.player.world.isClient) return;
 
         ItemStack enchantedItem = inventoryInput.getInvStack(0);
         ItemStack bookStack = inventoryInput.getInvStack(1);
@@ -214,13 +215,13 @@ public class DisenchantTableContainer extends Container {
             result.setInvStack(0, ItemStack.EMPTY);
             levelCost.set(0);
         } else {
-            if(null != selectedEnchantment) return;
+            if (null != selectedEnchantment) return;
             levelCost.set(1);
             ItemStack enchantedItemCopy = enchantedItem.copy();
             Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(enchantedItemCopy);
-            if(1 < enchantments.size()) {
+            if (1 < enchantments.size()) {
                 int count = 0;
-                if(null == selectedEnchantment) {
+                if (null == selectedEnchantment) {
                     int selected = random.nextInt(enchantments.size());
                     for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
                         if (count == selected) {
@@ -232,17 +233,17 @@ public class DisenchantTableContainer extends Container {
                     }
                 }
             } else {
-                if(enchantments.entrySet().iterator().hasNext()) {
+                if (enchantments.entrySet().iterator().hasNext()) {
                     Map.Entry<Enchantment, Integer> entry = enchantments.entrySet().iterator().next();
                     selectedEnchantment = entry.getKey();
                     selectedEnchantmentLevel = entry.getValue();
                 } else selectedEnchantment = null;
             }
 
-            if(null != selectedEnchantment) {
+            if (null != selectedEnchantment) {
                 int weight = selectedEnchantment.getWeight().getWeight();
                 int enchantLevel = selectedEnchantmentLevel;
-                float cost = (enchantLevel * LEVEL_MULTIPLIER) * (OFFSET - (weight * RARITY_MULTIPLIER));
+                float cost = (float) ((enchantLevel * LEVEL_MULTIPLIER) * (OFFSET - (weight * RARITY_MULTIPLIER)));
                 levelCost.set(round(cost));
                 ItemStack enchantedBook = EnchantedBookItem.makeStack(new InfoEnchantment(selectedEnchantment, selectedEnchantmentLevel));
                 result.setInvStack(0, enchantedBook);
@@ -293,7 +294,7 @@ public class DisenchantTableContainer extends Container {
 
     public void close(PlayerEntity playerEntity) {
         super.close(playerEntity);
-        for(int i = 0; i < inventoryInput.getInvSize(); i++) {
+        for (int i = 0; i < inventoryInput.getInvSize(); i++) {
             ItemScatterer.spawn(playerEntity.world, playerEntity.getBlockPos(), inventoryInput);
         }
     }
